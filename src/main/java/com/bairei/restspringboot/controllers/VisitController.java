@@ -10,6 +10,7 @@ import com.bairei.restspringboot.services.VisitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,7 @@ public class VisitController {
         return new ResponseEntity<>((Visit)null, HttpStatus.NOT_IMPLEMENTED);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @RequestMapping (value = "/visit", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Visit> saveVisit(@RequestBody Visit visit) throws InternalServerException {
         Visit savedVisit = visitService.save(visit);
@@ -49,6 +51,7 @@ public class VisitController {
         return new ResponseEntity<>(savedVisit, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @RequestMapping (value = "/visit", method = RequestMethod.PATCH, produces = "application/json")
     public ResponseEntity<Visit> updateVisit(@RequestBody Visit visit) throws InternalServerException {
         Visit savedVisit = visitService.saveOrUpdate(visit);
@@ -62,12 +65,14 @@ public class VisitController {
         return new ResponseEntity<>(visitService.findOne(id), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @RequestMapping("/visit/edit/{id}")
     public ResponseEntity<Visit> editVisit(@PathVariable Integer id) throws VisitNotFoundException {
         if (visitService.findOne(id) == null) throw new VisitNotFoundException(id);
         return new ResponseEntity<>(visitService.findOne(id), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
     @RequestMapping(value = "/visit/delete/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Visit> deleteVisit(@PathVariable Integer id) throws VisitNotFoundException {
         Visit deletedVisit = visitService.findOne(id);

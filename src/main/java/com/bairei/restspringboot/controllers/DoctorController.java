@@ -9,6 +9,7 @@ import com.bairei.restspringboot.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,11 +33,8 @@ public class DoctorController {
         return new ResponseEntity<>(userService.findUsersByRolesContaining(roleService.getAdminRole()), HttpStatus.OK);
     }
 
-    @RequestMapping("/doctor/new")
-    public ResponseEntity<String> newDoctor() throws Exception {
-        return new ResponseEntity<>("Not implemented", HttpStatus.NOT_IMPLEMENTED);
-    }
 
+    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @RequestMapping (value = "/doctor", method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<User> saveDoctor(@RequestBody User doctor) throws InternalServerException {
         try {
@@ -47,7 +45,7 @@ public class DoctorController {
         }
     }
 
-
+    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @RequestMapping (value = "/doctor", method = RequestMethod.PATCH, consumes = "application/json")
     public ResponseEntity<User> updateDoctor(@RequestBody User doctor) throws InternalServerException {
         try {
@@ -67,6 +65,7 @@ public class DoctorController {
         return new ResponseEntity<>(userService.findOne(id), HttpStatus.OK);
     }
 
+    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "doctor/edit/{id}")
     public ResponseEntity<User> editDoctor(@PathVariable Integer id) throws UserNotFoundException {
         User user = userService.findOne(id);
@@ -76,6 +75,7 @@ public class DoctorController {
         return new ResponseEntity<>(userService.findOne(id), HttpStatus.OK);
     }
 
+    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "doctor/delete/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<User> deleteDoctor(@PathVariable Integer id) throws UserNotFoundException {
         User deleted = userService.findOne(id);

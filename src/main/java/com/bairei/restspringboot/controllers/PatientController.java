@@ -9,6 +9,7 @@ import com.bairei.restspringboot.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,16 +28,13 @@ public class PatientController {
     private RoleService roleService;
 
 
+    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/patients",method = RequestMethod.GET)
     public ResponseEntity<List<User>> list(){
         return new ResponseEntity<>(userService.findUsersByRolesContaining(roleService.getUserRole()), HttpStatus.OK);
     }
 
-    @RequestMapping("/patient/new")
-    public ResponseEntity<User> newPatient(){
-        return new ResponseEntity<>((User) null, HttpStatus.NOT_IMPLEMENTED);
-    }
-
+    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @RequestMapping (value = "patient", method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<User> savePatient(@RequestBody User patient) throws InternalServerException {
         try {
@@ -47,6 +45,7 @@ public class PatientController {
         }
     }
 
+    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @RequestMapping (value = "patient/{id}")
     public ResponseEntity<User> showPatient (@PathVariable Integer id) throws UserNotFoundException {
         User user = userService.findOne(id);
@@ -54,6 +53,7 @@ public class PatientController {
         return new ResponseEntity<>(userService.findOne(id), HttpStatus.OK);
     }
 
+    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "patient/delete/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<User> deletePatient(@PathVariable Integer id) throws UserNotFoundException {
         User user = userService.findOne(id);
