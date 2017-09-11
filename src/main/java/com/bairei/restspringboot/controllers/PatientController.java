@@ -10,13 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.logging.Logger;
 
 @RestController
+@PreAuthorize(value = "hasRole('ROLE_ADMIN')")
 public class PatientController {
 
     private final static Logger log = Logger.getLogger(PatientController.class.toString());
@@ -27,25 +27,22 @@ public class PatientController {
     @Autowired
     private RoleService roleService;
 
-
-    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "/patients",method = RequestMethod.GET)
     public ResponseEntity<List<User>> list(){
         return new ResponseEntity<>(userService.findUsersByRolesContaining(roleService.getUserRole()), HttpStatus.OK);
     }
 
-    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @RequestMapping (value = "patient", method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<User> savePatient(@RequestBody User patient) throws InternalServerException {
         try {
             User savedPatient = userService.save(patient);
             return new ResponseEntity<>(savedPatient, HttpStatus.OK);
         } catch (Exception e) {
+            log.warning(e.toString());
             throw new InternalServerException();
         }
     }
 
-    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @RequestMapping (value = "patient/{id}")
     public ResponseEntity<User> showPatient (@PathVariable Integer id) throws UserNotFoundException {
         User user = userService.findOne(id);
@@ -53,7 +50,6 @@ public class PatientController {
         return new ResponseEntity<>(userService.findOne(id), HttpStatus.OK);
     }
 
-    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "patient/delete/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<User> deletePatient(@PathVariable Integer id) throws UserNotFoundException {
         User user = userService.findOne(id);

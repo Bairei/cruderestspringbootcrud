@@ -11,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -35,7 +37,9 @@ public class VisitController {
 
     @RequestMapping(value = "/visits",method = RequestMethod.GET)
     public ResponseEntity<List<Visit>> list(){
-        return new ResponseEntity<>(visitService.findAll(), HttpStatus.OK);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (Arrays.toString(auth.getAuthorities().toArray()).contains("ROLE_ADMIN")) return new ResponseEntity<>(visitService.findAll(), HttpStatus.OK);
+        else return new ResponseEntity<>(visitService.findAllByPatient(userService.findUserByEmail(auth.getName())),HttpStatus.OK);
     }
 
     @RequestMapping("/visit/new")

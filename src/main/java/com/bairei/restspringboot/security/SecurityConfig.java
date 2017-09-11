@@ -1,4 +1,4 @@
-package com.bairei.restspringboot.config;
+package com.bairei.restspringboot.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +13,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -25,6 +28,15 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserDetailsService service;
 
+    @Autowired
+    private AuthEntryPoint entryPoint;
+
+    @Autowired
+    private AuthFailureHandler failureHandler;
+
+    @Autowired
+    private AuthSuccessHandler successHandler;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -36,9 +48,12 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/visit").authenticated()
                 .antMatchers(HttpMethod.PATCH,"/visit").authenticated()
                 .and()
+                .exceptionHandling().authenticationEntryPoint(entryPoint)
+                .and()
+                .formLogin().successHandler(successHandler).failureHandler(failureHandler)
+                .and()
                 .csrf().disable();
     }
-
 
     @Override
     protected void configure (AuthenticationManagerBuilder auth) throws Exception {

@@ -6,6 +6,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.Date;
 
@@ -16,14 +17,18 @@ public class Visit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm", iso = DateTimeFormat.ISO.NONE)
+    @NotNull
     private Date date;
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull
     private User doctor;
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @NotNull
     private User patient;
     @Pattern(regexp = "^[1-9]$|^1[0-9]$|^20$", message = "You must enter valid room number in range of 1-20")
+    @NotNull
     private String consultingRoom;
 
     public Visit(){}

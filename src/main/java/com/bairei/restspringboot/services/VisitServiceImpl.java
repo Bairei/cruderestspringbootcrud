@@ -4,6 +4,7 @@ import com.bairei.restspringboot.domain.User;
 import com.bairei.restspringboot.domain.Visit;
 import com.bairei.restspringboot.repositories.VisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -62,6 +63,7 @@ public class VisitServiceImpl implements VisitService {
         return visitRepository.findAll();
     }
 
+    @Cacheable("cache")
     @Override
     public Visit findOne(Integer id) {
         return visitRepository.getOne(id);

@@ -4,6 +4,7 @@ import com.bairei.restspringboot.domain.Role;
 import com.bairei.restspringboot.domain.User;
 import com.bairei.restspringboot.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder passwordEncoder;
 
 
+    @Cacheable("cache")
     @Override
     public User findUserByEmail(String email) {
         return userRepository.findUserByEmail(email);
@@ -44,6 +46,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
+    @Cacheable("cache")
     @Override
     public User findOne(Integer id) {
         return userRepository.getOne(id);
