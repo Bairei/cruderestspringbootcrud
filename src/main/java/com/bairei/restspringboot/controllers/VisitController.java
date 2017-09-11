@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
@@ -28,18 +29,9 @@ public class VisitController {
     @Autowired
     private VisitService visitService;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private RoleService roleService;
-
-
     @RequestMapping(value = "/visits",method = RequestMethod.GET)
     public ResponseEntity<List<Visit>> list(){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (Arrays.toString(auth.getAuthorities().toArray()).contains("ROLE_ADMIN")) return new ResponseEntity<>(visitService.findAll(), HttpStatus.OK);
-        else return new ResponseEntity<>(visitService.findAllByPatient(userService.findUserByEmail(auth.getName())),HttpStatus.OK);
+        return new ResponseEntity<>(visitService.findAll(),HttpStatus.OK);
     }
 
     @RequestMapping("/visit/new")

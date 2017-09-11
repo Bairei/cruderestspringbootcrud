@@ -5,6 +5,7 @@ import com.bairei.restspringboot.domain.Visit;
 import com.bairei.restspringboot.repositories.VisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -59,6 +60,7 @@ public class VisitServiceImpl implements VisitService {
     }
 
     @Override
+    @PostFilter("hasRole('ROLE_ADMIN') || filterObject.patient.email == authentication.name")
     public List<Visit> findAll() {
         return visitRepository.findAll();
     }
