@@ -4,20 +4,13 @@ import com.bairei.restspringboot.domain.Error;
 import com.bairei.restspringboot.domain.Visit;
 import com.bairei.restspringboot.exceptions.InternalServerException;
 import com.bairei.restspringboot.exceptions.VisitNotFoundException;
-import com.bairei.restspringboot.services.RoleService;
-import com.bairei.restspringboot.services.UserService;
 import com.bairei.restspringboot.services.VisitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.access.prepost.PreFilter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -43,7 +36,7 @@ public class VisitController {
     @RequestMapping (value = "/visit", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Visit> saveVisit(@RequestBody Visit visit) throws InternalServerException {
         Visit savedVisit = visitService.save(visit);
-        if (savedVisit == null) throw new InternalServerException();
+        if (savedVisit == null) throw new InternalServerException(new Exception("Unable to save visit!"));
         return new ResponseEntity<>(savedVisit, HttpStatus.CREATED);
     }
 
@@ -51,12 +44,12 @@ public class VisitController {
     @RequestMapping (value = "/visit", method = RequestMethod.PATCH, produces = "application/json")
     public ResponseEntity<Visit> updateVisit(@RequestBody Visit visit) throws InternalServerException {
         Visit savedVisit = visitService.saveOrUpdate(visit);
-        if (savedVisit == null) throw new InternalServerException();
+        if (savedVisit == null) throw new InternalServerException(new Exception("Unable to update visit!"));
         return new ResponseEntity<>(savedVisit, HttpStatus.CREATED);
     }
 
     @RequestMapping (value = "/visit/{id}", method = RequestMethod.GET)
-    public ResponseEntity<Visit> showVisit (@PathVariable Integer id, Model model) throws VisitNotFoundException {
+    public ResponseEntity<Visit> showVisit (@PathVariable Integer id) throws VisitNotFoundException {
         if (visitService.findOne(id) == null) throw new VisitNotFoundException(id);
         return new ResponseEntity<>(visitService.findOne(id), HttpStatus.OK);
     }
@@ -85,7 +78,7 @@ public class VisitController {
 
     @ExceptionHandler(InternalServerException.class)
     public ResponseEntity<Error> internalServerException(InternalServerException e){
-        Error error = new Error(4, "Internal Server Exception");
+        Error error = new Error(4, "Internal Server Exception:\n" + e);
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

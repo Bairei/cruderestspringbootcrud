@@ -12,14 +12,14 @@ import java.util.Set;
 @Entity
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @NotNull private String email;
     @NotNull private String name;
     @NotNull private String surname;
-    @NotNull private String password;
-    @NotNull private String confirmPassword;
-    private String secret;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) @NotNull private String password;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) @NotNull private String confirmPassword;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) private String secret;
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
     private Set<Role> roles;
 
@@ -84,8 +84,6 @@ public class User {
         this.roles = roles;
     }
 
-    @JsonIgnore
-    @JsonProperty(value = "confirmPassword")
     public String getConfirmPassword() {
         return confirmPassword;
     }
@@ -94,8 +92,6 @@ public class User {
         this.confirmPassword = confirmPassword;
     }
 
-    @JsonIgnore
-    @JsonProperty(value = "secret")
     public String getSecret() {
         return secret;
     }

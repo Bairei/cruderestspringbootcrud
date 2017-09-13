@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,21 +37,24 @@ public class DoctorController {
     @RequestMapping (value = "/doctor", method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<User> saveDoctor(@RequestBody User doctor) throws InternalServerException {
         try {
+            if(doctor.getRoles().size() < 1) doctor.setRoles(roleService.createAdminRole());
             User savedDoctor = userService.save(doctor);
             return new ResponseEntity<>(savedDoctor,HttpStatus.OK);
         } catch (Exception e) {
-            throw new InternalServerException();
+            throw new InternalServerException(e);
         }
     }
 
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @RequestMapping (value = "/doctor", method = RequestMethod.PATCH, consumes = "application/json")
-    public ResponseEntity<User> updateDoctor(@RequestBody User doctor) throws InternalServerException {
+    @RequestMapping (value = "/doctor", method = RequestMethod.PUT, consumes = "application/json")
+    public ResponseEntity<User> saveOrUpdateDoctor(@RequestBody User doctor) throws InternalServerException, UserNotFoundException {
         try {
-            User savedDoctor = userService.save(doctor);
-            return new ResponseEntity<>(savedDoctor,HttpStatus.OK);
+            User doctorToPut = userService.put(doctor);
+            return new ResponseEntity<>(doctorToPut,HttpStatus.OK);
+        } catch (UserNotFoundException e) {
+            throw new UserNotFoundException(doctor.getId());
         } catch (Exception e) {
-            throw new InternalServerException();
+            throw new InternalServerException(e);
         }
     }
 
@@ -77,12 +79,18 @@ public class DoctorController {
 
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
     @RequestMapping(value = "doctor/delete/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<User> deleteDoctor(@PathVariable Integer id) throws UserNotFoundException {
+    public ResponseEntity<User> deleteDoctor(@PathVariable Integer id) throws UserNotFoundException, InternalServerException {
         User deleted = userService.findOne(id);
         if (deleted == null || !deleted.getRoles().contains(roleService.getAdminRole())){
             throw new UserNotFoundException(id);
         }
-        userService.delete(id);
+        try {
+            userService.delete(id);
+        } catch (UserNotFoundException unfe) {
+            throw new UserNotFoundException(id);
+        } catch (Exception e) {
+            throw new InternalServerException(e);
+        }
         return new ResponseEntity<>(deleted, HttpStatus.OK);
     }
 
@@ -95,7 +103,7 @@ public class DoctorController {
 
     @ExceptionHandler(InternalServerException.class)
     public ResponseEntity<Error> internalServerException(InternalServerException e){
-        Error error = new Error(6, "Internal Error");
+        Error error = new Error(6, "Internal Error:\n" + e.getException());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

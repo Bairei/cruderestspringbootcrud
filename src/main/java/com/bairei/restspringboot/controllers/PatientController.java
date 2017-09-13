@@ -35,11 +35,12 @@ public class PatientController {
     @RequestMapping (value = "patient", method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<User> savePatient(@RequestBody User patient) throws InternalServerException {
         try {
+            if (patient.getRoles().size() < 1) patient.setRoles(roleService.createUserRole());
             User savedPatient = userService.save(patient);
             return new ResponseEntity<>(savedPatient, HttpStatus.OK);
         } catch (Exception e) {
             log.warning(e.toString());
-            throw new InternalServerException();
+            throw new InternalServerException(e);
         }
     }
 
@@ -51,10 +52,16 @@ public class PatientController {
     }
 
     @RequestMapping(value = "patient/delete/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<User> deletePatient(@PathVariable Integer id) throws UserNotFoundException {
+    public ResponseEntity<User> deletePatient(@PathVariable Integer id) throws UserNotFoundException, InternalServerException {
         User user = userService.findOne(id);
         if (user == null || !user.getRoles().contains(roleService.getUserRole())) throw new UserNotFoundException(id);
-        userService.delete(id);
+        try {
+            userService.delete(id);
+        } catch (UserNotFoundException unfe) {
+            throw new UserNotFoundException(id);
+        } catch (Exception e){
+            throw new InternalServerException(e);
+        }
         return new ResponseEntity<>(user,HttpStatus.OK);
     }
 
@@ -66,7 +73,7 @@ public class PatientController {
 
     @ExceptionHandler(InternalServerException.class)
     public ResponseEntity<Error> internalServerException(InternalServerException e){
-        Error error = new Error(8, "Internal Server Exception");
+        Error error = new Error(8, "Internal Server Exception:\n" + e.getException());
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
