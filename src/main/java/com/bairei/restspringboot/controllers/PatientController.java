@@ -27,12 +27,12 @@ public class PatientController {
     @Autowired
     private RoleService roleService;
 
-    @RequestMapping(value = "/patients",method = RequestMethod.GET)
+    @RequestMapping(value = "/patient",method = RequestMethod.GET)
     public ResponseEntity<List<User>> list(){
         return new ResponseEntity<>(userService.findUsersByRolesContaining(roleService.getUserRole()), HttpStatus.OK);
     }
 
-    @RequestMapping (value = "patient", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping (value = "/patient", method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity<User> savePatient(@RequestBody User patient) throws InternalServerException {
         try {
             if (patient.getRoles().size() < 1) patient.setRoles(roleService.createUserRole());
@@ -44,14 +44,14 @@ public class PatientController {
         }
     }
 
-    @RequestMapping (value = "patient/{id}")
+    @RequestMapping (value = "/patient/{id}", method = RequestMethod.GET)
     public ResponseEntity<User> showPatient (@PathVariable Integer id) throws UserNotFoundException {
         User user = userService.findOne(id);
         if (user == null || !user.getRoles().contains(roleService.getUserRole())) throw new UserNotFoundException(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "patient/delete/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/patient/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<User> deletePatient(@PathVariable Integer id) throws UserNotFoundException, InternalServerException {
         User user = userService.findOne(id);
         if (user == null || !user.getRoles().contains(roleService.getUserRole())) throw new UserNotFoundException(id);

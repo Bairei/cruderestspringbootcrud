@@ -27,7 +27,7 @@ public class DoctorController {
     private RoleService roleService;
 
 
-    @RequestMapping(value = "/doctors",method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/doctor",method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<User>> list(){
         return new ResponseEntity<>(userService.findUsersByRolesContaining(roleService.getAdminRole()), HttpStatus.OK);
     }
@@ -58,7 +58,7 @@ public class DoctorController {
         }
     }
 
-    @RequestMapping (value = "/doctor/{id}", produces = "application/json")
+    @RequestMapping (value = "/doctor/{id}", method = RequestMethod.GET)
     public ResponseEntity<User> showDoctor (@PathVariable Integer id) throws UserNotFoundException {
         User user = userService.findOne(id);
         if (user == null || !user.getRoles().contains(roleService.getAdminRole())){
@@ -68,17 +68,7 @@ public class DoctorController {
     }
 
     @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @RequestMapping(value = "doctor/edit/{id}")
-    public ResponseEntity<User> editDoctor(@PathVariable Integer id) throws UserNotFoundException {
-        User user = userService.findOne(id);
-        if (user == null || !user.getRoles().contains(roleService.getAdminRole())){
-            throw new UserNotFoundException(id);
-        }
-        return new ResponseEntity<>(userService.findOne(id), HttpStatus.OK);
-    }
-
-    @PreAuthorize(value = "hasRole('ROLE_ADMIN')")
-    @RequestMapping(value = "doctor/delete/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "doctor/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<User> deleteDoctor(@PathVariable Integer id) throws UserNotFoundException, InternalServerException {
         User deleted = userService.findOne(id);
         if (deleted == null || !deleted.getRoles().contains(roleService.getAdminRole())){
