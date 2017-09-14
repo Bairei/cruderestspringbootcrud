@@ -48,7 +48,7 @@ public class PatientController {
     public ResponseEntity<User> showPatient (@PathVariable Integer id) throws UserNotFoundException {
         User user = userService.findOne(id);
         if (user == null || !user.getRoles().contains(roleService.getUserRole())) throw new UserNotFoundException(id);
-        return new ResponseEntity<>(userService.findOne(id), HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @RequestMapping(value = "patient/delete/{id}", method = RequestMethod.DELETE)

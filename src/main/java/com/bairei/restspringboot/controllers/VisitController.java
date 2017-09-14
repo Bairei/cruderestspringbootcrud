@@ -61,7 +61,7 @@ public class VisitController {
         return new ResponseEntity<>(visitService.findOne(id), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_USER')")
+    @PreAuthorize("(hasRole('ROLE_ADMIN') and authentication.name == @visitRepository.getOne(#id).doctor.email) or (hasRole('ROLE_USER') and authentication.name == @visitRepository.getOne(#id).patient.email)")
     @RequestMapping(value = "/visit/delete/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<Visit> deleteVisit(@PathVariable Integer id) throws VisitNotFoundException {
         Visit deletedVisit = visitService.findOne(id);

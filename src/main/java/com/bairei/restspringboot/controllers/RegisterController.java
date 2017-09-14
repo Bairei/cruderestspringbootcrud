@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+// TODO: handling POST request to allow creating either a patient user, or doctor (administrator)
+//
 
 @RestController
 public class RegisterController {
