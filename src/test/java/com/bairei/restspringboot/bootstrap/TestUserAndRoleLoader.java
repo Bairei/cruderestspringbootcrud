@@ -4,28 +4,32 @@ import com.bairei.restspringboot.domain.Role;
 import com.bairei.restspringboot.domain.User;
 import com.bairei.restspringboot.services.RoleService;
 import com.bairei.restspringboot.services.UserService;
-import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.logging.Logger;
 
 @Component
 @Profile("test")
-public class TestUserAndRoleLoader implements SmartInitializingSingleton {
+public class TestUserAndRoleLoader implements ApplicationListener<ContextRefreshedEvent> {
 
-    @Autowired
     private UserService userService;
 
-    @Autowired
     private RoleService roleService;
 
     private static final Logger log = Logger.getLogger(UserAndRoleLoader.class.toString());
 
-    @Override
-    public void afterSingletonsInstantiated() {
+    @Autowired
+    public TestUserAndRoleLoader(UserService userService, RoleService roleService) {
+        this.userService = userService;
+        this.roleService = roleService;
+    }
 
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         Role userRole = new Role();
         userRole.setName("ROLE_USER");
         roleService.save(userRole);
@@ -62,6 +66,5 @@ public class TestUserAndRoleLoader implements SmartInitializingSingleton {
             e.printStackTrace();
         }
         log.info("Saved user - id " + user.getId());
-
     }
 }

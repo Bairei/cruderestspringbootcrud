@@ -21,21 +21,23 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 
-    @Autowired
-    @Lazy
+
     private BCryptPasswordEncoder passwordEncoder;
-
-    @Autowired
     private UserDetailsService service;
-
-    @Autowired
     private AuthEntryPoint entryPoint;
-
-    @Autowired
     private AuthFailureHandler failureHandler;
+    private AuthSuccessHandler successHandler;
 
     @Autowired
-    private AuthSuccessHandler successHandler;
+    public SecurityConfig (@Lazy BCryptPasswordEncoder passwordEncoder, UserDetailsService service,
+                           AuthEntryPoint entryPoint, AuthFailureHandler failureHandler,
+                           AuthSuccessHandler successHandler){
+        this.passwordEncoder = passwordEncoder;
+        this.service = service;
+        this.entryPoint = entryPoint;
+        this.failureHandler = failureHandler;
+        this.successHandler = successHandler;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {

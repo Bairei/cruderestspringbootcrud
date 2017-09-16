@@ -20,11 +20,14 @@ public class DoctorController {
 
     private final static Logger log = Logger.getLogger(DoctorController.class.toString());
 
-    @Autowired
     private UserService userService;
+    private RoleService roleService;
 
     @Autowired
-    private RoleService roleService;
+    public DoctorController(UserService userService, RoleService roleService){
+        this.roleService = roleService;
+        this.userService = userService;
+    }
 
 
     @RequestMapping(value = "/doctor",method = RequestMethod.GET, produces = "application/json")

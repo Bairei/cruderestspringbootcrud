@@ -14,11 +14,13 @@ import java.util.logging.Logger;
 @Component
 public class VisitServiceImpl implements VisitService {
 
-    @Autowired
     private VisitRepository visitRepository;
-
-//    @Autowired
 //    private MailingService mailingService;
+
+    @Autowired
+    public VisitServiceImpl(VisitRepository visitRepository){
+        this.visitRepository = visitRepository;
+    }
 
     private final static Logger log = Logger.getLogger(VisitServiceImpl.class.toString());
 

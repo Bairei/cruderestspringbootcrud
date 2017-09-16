@@ -1,11 +1,8 @@
 package com.bairei.restspringboot;
 
-import com.bairei.restspringboot.domain.User;
 import com.bairei.restspringboot.services.RoleService;
 import com.bairei.restspringboot.services.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matcher;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -14,17 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.http.codec.json.Jackson2JsonEncoder;
-import org.springframework.http.converter.json.GsonBuilderUtils;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.hamcrest.Matchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.isA;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 
@@ -37,45 +32,31 @@ public class RestControllersTest {
     private static final Logger log = LoggerFactory.getLogger(RestControllersTest.class);
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
-    private RoleService roleService;
-
-    @Autowired
     private MockMvc mvc;
+
 
     @Test
     public void adminGetPatients() throws Exception {
-        this.mvc.perform(get("/patients").accept(MediaType.APPLICATION_JSON)
+        this.mvc.perform(get("/patient").accept(MediaType.APPLICATION_JSON)
                 .with(httpBasic("asd@oro.com", "asdasd")))
                 .andExpect(status().isOk());
     }
 
     @Test
     public void userGetPatients() throws Exception {
-        this.mvc.perform(get("/patients").accept(MediaType.APPLICATION_JSON)
+        this.mvc.perform(get("/patient").accept(MediaType.APPLICATION_JSON)
                 .with(httpBasic("jakismail@mail.pl", "pass")))
                 .andExpect(status().isForbidden());
     }
 
     @Test
     public void nonAuthorizedGetPatients() throws Exception {
-        this.mvc.perform(get("/patients").accept(MediaType.APPLICATION_JSON))
+        this.mvc.perform(get("/patient").accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
     public void adminPostPatient() throws Exception {
-//        User patient = new User();
-//        patient.setName("mock");
-//        patient.setSurname("patient");
-//        patient.setEmail("mock@patient.com");
-//        patient.setPassword("mock");
-//        patient.setConfirmPassword("mock");
-//        patient.setSecret("");
-//        patient.setRoles(roleService.createUserRole());
-//        ObjectMapper mapper = new ObjectMapper();
 
         String json =
                 "{\"email\":\"mock@patient.com\"," +
@@ -85,8 +66,6 @@ public class RestControllersTest {
                 "\"confirmPassword\":\"mock\"," +
                 "\"secret\":\"\"," +
                 "\"roles\":[{\"id\":1,\"name\":\"ROLE_USER\"}]}";
-
-        log.info("JSON: " + json);
 
         this.mvc.perform(post("/patient")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)

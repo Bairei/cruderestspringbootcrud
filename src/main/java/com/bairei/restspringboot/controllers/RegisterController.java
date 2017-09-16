@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RegisterController {
 
-    @Autowired
     private UserService userService;
-
-    @Autowired
     private RoleService roleService;
 
-//    @Autowired
-//    private LoginService loginService;
+    @Autowired
+    public RegisterController(UserService userService, RoleService roleService){
+        this.roleService = roleService;
+        this.userService = userService;
+    }
 
     @RequestMapping(value = "/register", method = RequestMethod.GET)
     public ResponseEntity<User> userForm() {

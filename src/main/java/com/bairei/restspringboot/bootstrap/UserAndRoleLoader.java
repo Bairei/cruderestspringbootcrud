@@ -6,9 +6,10 @@ import com.bairei.restspringboot.domain.Visit;
 import com.bairei.restspringboot.services.RoleService;
 import com.bairei.restspringboot.services.UserService;
 import com.bairei.restspringboot.services.VisitService;
-import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -16,22 +17,24 @@ import java.util.logging.Logger;
 
 @Component
 @Profile("dev")
-public class UserAndRoleLoader implements SmartInitializingSingleton {
+public class UserAndRoleLoader implements ApplicationListener<ContextRefreshedEvent> {
 
-    @Autowired
     private UserService userService;
-
-    @Autowired
     private RoleService roleService;
+    private VisitService visitService;
 
     @Autowired
-    private VisitService visitService;
+    public UserAndRoleLoader(UserService userService, RoleService roleService, VisitService visitService){
+        this.userService = userService;
+        this.roleService = roleService;
+        this.visitService = visitService;
+    }
 
     private static final Logger log = Logger.getLogger(UserAndRoleLoader.class.toString());
 
-    @Override
-    public void afterSingletonsInstantiated() {
 
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         Role userRole = new Role();
         userRole.setName("ROLE_USER");
         roleService.save(userRole);
@@ -83,7 +86,6 @@ public class UserAndRoleLoader implements SmartInitializingSingleton {
             e.printStackTrace();
         }
         log.info("Saved user - id " + user.getId());
-//        log.info(userService.findAll().toString());
 
         Visit visit = new Visit();
         visit.setConsultingRoom("2");
@@ -93,6 +95,5 @@ public class UserAndRoleLoader implements SmartInitializingSingleton {
         visit.setPatient(user);
         visitService.save(visit);
         log.info("saved visit - id " + visit.getId());
-
     }
 }

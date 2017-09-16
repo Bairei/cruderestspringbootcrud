@@ -19,8 +19,12 @@ public class VisitController {
 
     private final static Logger log = Logger.getLogger(VisitController.class.toString());
 
-    @Autowired
     private VisitService visitService;
+
+    @Autowired
+    public VisitController(VisitService visitService){
+        this.visitService = visitService;
+    }
 
     @RequestMapping(value = "/visit",method = RequestMethod.GET)
     public ResponseEntity<List<Visit>> list(){

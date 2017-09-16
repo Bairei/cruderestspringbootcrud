@@ -21,11 +21,14 @@ public class PatientController {
 
     private final static Logger log = Logger.getLogger(PatientController.class.toString());
 
-    @Autowired
     private UserService userService;
+    private RoleService roleService;
 
     @Autowired
-    private RoleService roleService;
+    public PatientController(UserService userService, RoleService roleService){
+        this.userService = userService;
+        this.roleService = roleService;
+    }
 
     @RequestMapping(value = "/patient",method = RequestMethod.GET)
     public ResponseEntity<List<User>> list(){
