@@ -30,13 +30,6 @@ public class TestUserAndRoleLoader implements ApplicationListener<ContextRefresh
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        Role userRole = new Role();
-        userRole.setName("ROLE_USER");
-        roleService.save(userRole);
-        Role adminRole = new Role();
-        adminRole.setName("ROLE_ADMIN");
-        roleService.save(adminRole);
-
         User doctor = new User();
         doctor.setName("asdasd");
         doctor.setSurname("orortiehn");
