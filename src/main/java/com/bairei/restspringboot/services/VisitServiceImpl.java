@@ -1,7 +1,7 @@
 package com.bairei.restspringboot.services;
 
-import com.bairei.restspringboot.domain.User;
-import com.bairei.restspringboot.domain.Visit;
+import com.bairei.restspringboot.models.User;
+import com.bairei.restspringboot.models.Visit;
 import com.bairei.restspringboot.repositories.VisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;

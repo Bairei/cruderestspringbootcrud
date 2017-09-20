@@ -1,6 +1,6 @@
 package com.bairei.restspringboot.controllers;
 
-import com.bairei.restspringboot.domain.User;
+import com.bairei.restspringboot.models.User;
 import com.bairei.restspringboot.services.RoleService;
 import com.bairei.restspringboot.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

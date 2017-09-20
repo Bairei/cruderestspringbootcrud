@@ -1,7 +1,7 @@
 package com.bairei.restspringboot.services;
 
-import com.bairei.restspringboot.domain.Role;
-import com.bairei.restspringboot.domain.User;
+import com.bairei.restspringboot.models.Role;
+import com.bairei.restspringboot.models.User;
 import com.bairei.restspringboot.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;

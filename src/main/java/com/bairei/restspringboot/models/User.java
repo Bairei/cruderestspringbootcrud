@@ -1,4 +1,4 @@
-package com.bairei.restspringboot.domain;
+package com.bairei.restspringboot.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

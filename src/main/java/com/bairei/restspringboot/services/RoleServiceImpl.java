@@ -1,6 +1,6 @@
 package com.bairei.restspringboot.services;
 
-import com.bairei.restspringboot.domain.Role;
+import com.bairei.restspringboot.models.Role;
 import com.bairei.restspringboot.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

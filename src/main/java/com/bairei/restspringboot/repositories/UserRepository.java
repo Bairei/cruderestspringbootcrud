@@ -1,7 +1,7 @@
 package com.bairei.restspringboot.repositories;
 
-import com.bairei.restspringboot.domain.Role;
-import com.bairei.restspringboot.domain.User;
+import com.bairei.restspringboot.models.Role;
+import com.bairei.restspringboot.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

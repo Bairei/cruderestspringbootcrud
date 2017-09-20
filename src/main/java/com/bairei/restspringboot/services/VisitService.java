@@ -1,7 +1,7 @@
 package com.bairei.restspringboot.services;
 
-import com.bairei.restspringboot.domain.User;
-import com.bairei.restspringboot.domain.Visit;
+import com.bairei.restspringboot.models.User;
+import com.bairei.restspringboot.models.Visit;
 
 import java.util.List;
 

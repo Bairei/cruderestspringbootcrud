@@ -1,8 +1,8 @@
 package com.bairei.restspringboot.bootstrap;
 
-import com.bairei.restspringboot.domain.Role;
-import com.bairei.restspringboot.domain.User;
-import com.bairei.restspringboot.domain.Visit;
+import com.bairei.restspringboot.models.Role;
+import com.bairei.restspringboot.models.User;
+import com.bairei.restspringboot.models.Visit;
 import com.bairei.restspringboot.services.RoleService;
 import com.bairei.restspringboot.services.UserService;
 import com.bairei.restspringboot.services.VisitService;
@@ -32,15 +32,14 @@ public class UserAndRoleLoader implements ApplicationListener<ContextRefreshedEv
 
     private static final Logger log = Logger.getLogger(UserAndRoleLoader.class.toString());
 
-
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        Role userRole = new Role();
-        userRole.setName("ROLE_USER");
-        roleService.save(userRole);
-        Role adminRole = new Role();
-        adminRole.setName("ROLE_ADMIN");
-        roleService.save(adminRole);
+//        Role userRole = new Role();
+//        userRole.setName("ROLE_USER");
+//        roleService.save(userRole);
+//        Role adminRole = new Role();
+//        adminRole.setName("ROLE_ADMIN");
+//        roleService.save(adminRole);
 
         User doctor = new User();
         doctor.setName("asdasd");

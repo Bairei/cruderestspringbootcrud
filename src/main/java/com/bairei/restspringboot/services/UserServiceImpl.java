@@ -1,14 +1,13 @@
 package com.bairei.restspringboot.services;
 
-import com.bairei.restspringboot.domain.Role;
-import com.bairei.restspringboot.domain.User;
+import com.bairei.restspringboot.models.Role;
+import com.bairei.restspringboot.models.User;
 import com.bairei.restspringboot.exceptions.InternalServerException;
 import com.bairei.restspringboot.exceptions.UserNotFoundException;
 import com.bairei.restspringboot.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;

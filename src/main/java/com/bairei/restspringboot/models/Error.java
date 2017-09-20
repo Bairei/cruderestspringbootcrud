@@ -1,4 +1,4 @@
-package com.bairei.restspringboot.domain;
+package com.bairei.restspringboot.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -7,12 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Entity
 public class Error {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
     private Integer code;
     private String error;
 
@@ -42,13 +37,5 @@ public class Error {
         return "Error{" +
                 "error='" + error + '\'' +
                 '}';
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 }

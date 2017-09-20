@@ -1,7 +1,7 @@
 package com.bairei.restspringboot.services;
 
 
-import com.bairei.restspringboot.domain.Role;
+import com.bairei.restspringboot.models.Role;
 
 import java.util.Set;
 

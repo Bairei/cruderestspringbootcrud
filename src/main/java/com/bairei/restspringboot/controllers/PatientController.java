@@ -1,7 +1,7 @@
 package com.bairei.restspringboot.controllers;
 
-import com.bairei.restspringboot.domain.User;
-import com.bairei.restspringboot.domain.Error;
+import com.bairei.restspringboot.models.User;
+import com.bairei.restspringboot.models.Error;
 import com.bairei.restspringboot.exceptions.InternalServerException;
 import com.bairei.restspringboot.exceptions.UserNotFoundException;
 import com.bairei.restspringboot.services.RoleService;
